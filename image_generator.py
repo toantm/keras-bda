@@ -8,8 +8,7 @@ g = build_generator(latent_size)
 nb_miss = 100
 
 # load the weights from the last epoch
-# g.load_weights(sorted(glob('params_generator*'))[-1])
-g.load_weights('params_generator_epoch_068.hdf5')
+g.load_weights(sorted(glob('params_generator*'))[-1])
 
 np.random.seed(31337)
 
