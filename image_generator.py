@@ -4,20 +4,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 latent_size = 100
-g = build_generator(latent_size)
+generator = build_generator(latent_size)
+nb_miss = 1000
 
 # load the weights from the last epoch
-g.load_weights(sorted(glob('params_generator*'))[-1])
+generator.load_weights(sorted(glob('params_generator*'))[-1])
 
 np.random.seed(31337)
 
-noise = np.tile(np.random.uniform(-1, 1, (10, latent_size)), (10, 1))
+noise = np.random.normal(loc=0.0, scale=1, size=(100, latent_size))
+
 sampled_labels = np.array([
-    [i] * 10 for i in range(10)
-]).reshape(-1, 1)
+                              [i] * 10 for i in range(10)
+                              ]).reshape(-1, 1)
 
 # get a batch to display
-generated_images = g.predict(
+generated_images = generator.predict(
     [noise, sampled_labels], verbose=0)
 
 # arrange them into a grid
@@ -29,5 +31,3 @@ plt.imshow(img, cmap='gray')
 _ = plt.axis('off')
 
 plt.show()
-
-
