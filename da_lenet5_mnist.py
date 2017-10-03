@@ -1,10 +1,3 @@
-"""
-file: da_lenet5_mnist.py
-author: Toan Tran (toan.m.tran@adelaide.edu.au)
-Train the three sub-networks in the paper "A Bayesian Data Augmentation Approach for Learning Deep Models".
-The baseline classifier is Lenet5 on the MNIST dataset .
-This code was adapted from: https://github.com/lukedeo/keras-acgan
-"""
 from __future__ import print_function
 
 from collections import defaultdict
