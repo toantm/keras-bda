@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 latent_size = 100
 generator = build_generator(latent_size)
-nb_miss = 1000
 
 # load the weights from the last epoch
 generator.load_weights(sorted(glob('params_generator*'))[-1])
