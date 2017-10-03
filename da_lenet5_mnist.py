@@ -209,7 +209,7 @@ if __name__ == '__main__':
     train_history = defaultdict(list)
     test_history = defaultdict(list)
 
-    fo = open("accuracy_save.txt", "wb")
+    # fo = open("accuracy_save.txt", "wb")
 
     for epoch in range(nb_epochs):
         print('Epoch {} of {}'.format(epoch + 1, nb_epochs))
@@ -246,8 +246,9 @@ if __name__ == '__main__':
             aux_y = np_utils.to_categorical(aux_y, 10)
 
             # see if the discriminator and the classifier can figure itself out...
+            # discriminator
             epoch_disc_loss.append(discriminator.train_on_batch(X, y))
-            #
+            # and classifier
             epoch_lenet_loss.append(lenet.train_on_batch(X, aux_y))
 
             # make new noise. we generate 2 * batch size here such that we have
@@ -291,14 +292,14 @@ if __name__ == '__main__':
 
         lenet_train_loss = np.mean(np.array(epoch_lenet_loss), axis=0)
 
-        # evaluate the test classification accuracy
-
-        (loss, accuracy) = lenet.evaluate(X_test, Y_test, batch_size=batch_size, verbose=0)
-
-        # show the accuracy on the testing set
-        print("\n [INFO] accuracy: {:.2f}%".format(accuracy * 100))
-
-        fo.write('Test accuracy at the ' + str(epoch+1) + '-th iteration is: ' + str(accuracy) + '\n')
+        # # evaluate the test classification accuracy
+        #
+        # (loss, accuracy) = lenet.evaluate(X_test, Y_test, batch_size=batch_size, verbose=0)
+        #
+        # # show the accuracy on the testing set
+        # print("\n [INFO] accuracy: {:.2f}%".format(accuracy * 100))
+        #
+        # fo.write('Test accuracy at the ' + str(epoch+1) + '-th iteration is: ' + str(accuracy) + '\n')
 
         # make new noise
         noise = np.random.normal(loc=0.0, scale=1, size=(2 * nb_test, latent_size))
@@ -332,33 +333,16 @@ if __name__ == '__main__':
             'params_lenet_epoch_{0:03d}.hdf5'.format(epoch), True)
 
 
-        # generate some digits to display
-        noise = np.random.normal(loc=0.0, scale=1, size=(100, latent_size))
-
-        sampled_labels = np.array([
-            [i] * 10 for i in range(10)
-        ]).reshape(-1, 1)
-
-        # get a batch to display
-        generated_images = generator.predict(
-            [noise, sampled_labels], verbose=0)
-
-        # arrange them into a grid
-        img = (np.concatenate([r.reshape(-1, 28)
-                               for r in np.split(generated_images, 10)
-                               ], axis=-1) * 127.5 + 127.5).astype(np.uint8)
-
-        Image.fromarray(img).save(
-            'plot_epoch_{0:03d}_generated.png'.format(epoch))
-
     pickle.dump({'train': train_history, 'test': test_history},
                 open('acgan-history.pkl', 'wb'))
 
-    # (loss, accuracy) = resnet.evaluate(X_test, Y_test,
-    #                                    batch_size=batch_size, verbose=0)
-    #
-    # # show the accuracy on the testing set
-    # print("\n [INFO] Test accuracy: {:.2f}%".format(accuracy * 100))
+    # evaluate the test classification accuracy
 
-    fo.close()
+    (loss, accuracy) = lenet.evaluate(X_test, Y_test,
+                                       batch_size=batch_size, verbose=0)
+
+    # show the accuracy on the testing set
+    print("\n [INFO] Test accuracy: {:.2f}%".format(accuracy * 100))
+
+    # fo.close()
 
